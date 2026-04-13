@@ -1,0 +1,9 @@
+CC=gcc
+CFLAGS=-O2 -Wall -Wextra
+LIBS=-lOpenCL -lfreeglut -lopengl32 -lglu32 -lm
+
+raycaster_opencl: main_opencl.c raycasting_opencl.c
+	$(CC) $(CFLAGS) -o raycaster_opencl main_opencl.c raycasting_opencl.c $(LIBS)
+
+clean:
+	rm -f raycaster_opencl.exe raycaster_opencl
