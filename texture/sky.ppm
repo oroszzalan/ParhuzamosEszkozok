@@ -1,4 +1,4 @@
-unsigned char All_Textures[] =
+unsigned char sky[] =
 {
 212,
 222,
