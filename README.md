@@ -268,13 +268,9 @@ for (int y = 0; y < params->screenH; ++y) {
 
 A program minden 60. frame-nél kiírja a konzolra a mérési eredményeket.
 
-**OpenCL verzió** (`clGetEventProfilingInfo` – nanoszekundum pontosság):
+**OpenCL verzió** – `clGetEventProfilingInfo` (nanoszekundum pontosság)
 
-![GPU mérés](parhuzamoskernel.png)
-
-**Szekvenciális verzió** (`clock_gettime(CLOCK_MONOTONIC)`):
-
-![CPU mérés](parhuzamosszekvencialis.png)
+**Szekvenciális verzió** – `clock_gettime(CLOCK_MONOTONIC)`
 
 ---
 
@@ -291,6 +287,14 @@ A program minden 60. frame-nél kiírja a konzolra a mérési eredményeket.
 
 ## Mérési eredmények – 240 sugár (mért)
 
+**GPU (OpenCL):**
+
+![GPU mérés 240](parhuzamoskernel.png)
+
+**CPU (szekvenciális):**
+
+![CPU mérés 240](parhuzamosszekvencialis.png)
+
 | Verzió | Compute idő | Teljes frame | FPS |
 |--------|------------|--------------|-----|
 | CPU (szekvenciális) | ~2.0–2.4 ms | ~16 ms | ~61 |
@@ -300,14 +304,22 @@ A program minden 60. frame-nél kiírja a konzolra a mérési eredményeket.
 
 ---
 
-## Mérési eredmények – 480 sugár (becsült)
+## Mérési eredmények – 480 sugár (mért)
+
+**GPU (OpenCL):**
+
+![GPU mérés 480](parhuzamoskernel480.png)
+
+**CPU (szekvenciális):**
+
+![CPU mérés 480](parhuzamossek480.png)
 
 | Verzió | Compute idő | Teljes frame | FPS |
 |--------|------------|--------------|-----|
-| CPU (szekvenciális) | ~4.5 ms | ~20 ms | ~50 |
-| GPU (OpenCL) | ~1.5 ms | ~17 ms | ~59 |
+| CPU (szekvenciális) | ~3.5–4.9 ms | ~16 ms | ~61 |
+| GPU (OpenCL) | ~0.5–1.5 ms | ~16 ms | ~61 |
 
-**Következtetés:** Nagy sugárszámnál a GPU egyértelműen gyorsabb – a compute idő alig nő, míg a CPU lineárisan lassul.
+**Következtetés:** 480 sugárnál a GPU compute ideje átlagosan ~1.0 ms, a CPU-é ~4.2 ms – a GPU közel **4x gyorsabb** a számítási fázisban. A teljes frame idő mindkét verzióban hasonló marad az OpenGL overhead miatt.
 
 ---
 
@@ -321,29 +333,10 @@ A program minden 60. frame-nél kiírja a konzolra a mérési eredményeket.
 
 ## Összefoglalás
 
-| Sugárszám | Gyorsabb |
-|-----------|---------|
-| < 200 | CPU |
-| ~240 | Közel azonos |
-| > 300 | GPU |
+| Sugárszám | CPU compute | GPU compute | Gyorsabb |
+|-----------|------------|------------|---------|
+| 120 | ~1.1 ms | ~1.3–3.0 ms | CPU |
+| 240 | ~2.2 ms | ~1.4 ms | GPU (~36%) |
+| 480 | ~4.2 ms | ~1.0 ms | GPU (~4x) |
 
-A párhuzamos feldolgozás előnye akkor mutatkozik meg, ha a feladat elég nagy ahhoz, hogy a GPU overhead megtérüljön. Raycasting esetén ez körülbelül 300+ sugárnál következik be.
-
----
-
-# Fordítás és futtatás
-
-### OpenCL verzió (MSYS2 MinGW64)
-```bash
-cd /d/párhuzamos
-make -f Makefile_opencl
-./raycaster_opencl.exe
-```
-
-### Szekvenciális verzió
-```bash
-gcc -O2 -Wall -I. -o raycaster_seq seq_raycasting.c -lfreeglut -lopengl32 -lglu32 -lm
-./raycaster_seq.exe
-```
-
-A `raycasting_kernel.cl` fájlnak a futtatható program mellett kell lennie, mert futásidőben töltődik be.
+A párhuzamos feldolgozás előnye akkor mutatkozik meg, ha a feladat elég nagy ahhoz, hogy a GPU overhead megtérüljön. Raycasting esetén ez körülbelül 200-240 sugárnál következik be. 480 sugárnál a GPU már közel négyszer gyorsabb a számítási fázisban.

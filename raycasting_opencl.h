@@ -9,7 +9,7 @@
 
 #define SCREEN_W 1024
 #define SCREEN_H 576
-#define RAY_COUNT 240
+#define RAY_COUNT 480
 #define PI 3.1415926535f
 
 extern float player_x, player_y, player_DeltaX, player_DeltaY, angle;

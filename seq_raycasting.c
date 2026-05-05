@@ -7,7 +7,7 @@
 #include "texture/sky.ppm"
 
 #define PI 3.1415926535
-#define RAY_COUNT 240
+#define RAY_COUNT 480
 
 /* --- Idomereshez --- */
 static unsigned int g_frame_count    = 0;
